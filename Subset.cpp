@@ -7,6 +7,7 @@ using namespace std;
 
 int main() {	
 	int k;
+	cout << "Number of items: ";
 	cin >> k;
 	RandomizedQueue<string> RQ;
 	Deque<string> DQ;
@@ -16,9 +17,9 @@ int main() {
 		RQ.enqueue(item);
 		DQ.addFirst(item);
 	}
-	cout << endl;
+	cout << "Deque" << "\t" << "RQ" << endl;
 	for (int i = 0; i < k; i++) {
-		cout << RQ.dequeue() << " " << endl;
+		cout << DQ.removeLast() << "\t" << RQ.dequeue() << endl;
 	}		
 	return 0;
 }
