@@ -17,9 +17,12 @@ int main() {
 		RQ.enqueue(item);
 		DQ.addFirst(item);
 	}
+	Deque<string> c_DQ = DQ;
 	cout << "Deque" << "\t" << "RQ" << endl;
 	for (int i = 0; i < k; i++) {
-		cout << DQ.removeLast() << "\t" << RQ.dequeue() << endl;
-	}		
+		cout << c_DQ.removeFirst() << "\t" << RQ.dequeue() << endl;
+	}
+	c_DQ.addLast("test");
+	cout << DQ.removeLast() << endl;
 	return 0;
 }
