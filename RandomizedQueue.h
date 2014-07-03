@@ -89,8 +89,8 @@ template <class Item> Item RandomizedQueue<Item>::dequeue() {
 
 	int x = rand() % N;
 	Item answer = a[x];
-	N--;
-	a[x] = a[N];
+	
+	a[x] = a[--N];
 	
 
 	if (N > 0 && N == cap / 4) resize(cap / 2);
