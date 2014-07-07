@@ -10,7 +10,7 @@ public:
 	Deque();								// Default constructor
 	~Deque();								// Deconstructor
 	Deque(const Deque &that);				// Copy constructor
-	Deque &operator=(const Deque &that);	// Assignment operator *unfinished*
+	Deque &operator=(const Deque &that);	// Assignment operator
 	bool isEmpty();							// Checks if deque is empty
 	int size();								// Returns number of items in deque
 	void addFirst(const Item &item);		// Adds an item to the beginning of the deque
@@ -38,7 +38,7 @@ class DequeIter {
 
 // Default constructor
 template <class Item> Deque<Item>::Deque() : first(NULL), last(NULL), N(0) {
-
+	
 }
 
 // Destructor
@@ -53,8 +53,7 @@ template <class Item> Deque<Item>::~Deque() {
 
 // Copy constructor
 template <class Item> Deque<Item>::Deque(const Deque &that) : N(0), first(NULL), last(NULL) {
-	//if (that.N == 0) return *this;
-
+	
 	Node *current = that.first;	
 	Node *t_prev = NULL;
 	
@@ -73,8 +72,28 @@ template <class Item> Deque<Item>::Deque(const Deque &that) : N(0), first(NULL),
 	last = t_prev;
 	if (t_prev != NULL) t_prev->next = NULL;
 	if (N != that.N)
-		cout << "Error!" << endl;
+		cerr << "Error, copy constructor did not work!" << endl;
 	
+}
+
+// Copy assignment operator
+template <class Item> Deque<Item> & Deque<Item>::operator=(const Deque &that) {
+	if (this == &that) return *this;
+	
+	// Creates copy
+	Deque<Item> tmp(that);
+	
+	// Assigns elements
+	first = tmp.first;
+	last = tmp.last;
+	N = tmp.N;
+
+	// Deletes pointers to copy
+	tmp.first = NULL;
+	tmp.last = NULL;
+	tmp.N = 0;
+
+	return *this;
 }
 
 template <class Item> bool Deque<Item>::isEmpty() {
