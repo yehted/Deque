@@ -1,11 +1,9 @@
-#include <iterator>
 #include <stdexcept>
-
-template <class Item> class DequeIter;
+#include <iterator>
 
 template <class Item>
 class Deque {
-	friend class DequeIter < Item >;
+	//friend class Iterator < Item > ;
 public:
 	Deque();								// Default constructor
 	~Deque();								// Deconstructor
@@ -18,20 +16,20 @@ public:
 	Item removeFirst();						// Removes an item from the beginning of the deque
 	Item removeLast();						// Removes an item from the end of the deque
 
+	class iterator {
+	public:
+		iterator(Item *ptr);
+		void next();
+	};
 private:
-	struct Node {
+	class Node {
+	public:
 		Item item;
 		Node *next;
 		Node *prev;
 	};
 	Node *first, *last;
-	int N;	
-};
-
-template <class Item>
-class DequeIter {
-	typedef DequeIter<Item> iterator;
-
+	int N;
 };
 
 // Implementation
@@ -169,3 +167,10 @@ template <class Item> Item Deque<Item>::removeLast() {
 	last->next = NULL;
 	return t_item;
 }
+
+/*template <class Item> Deque<Item>::begin() {
+	Iterator iter;
+	iter.position = first;
+	iter.last = last;
+	return iter;
+}*/
