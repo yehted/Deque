@@ -12,18 +12,17 @@ public:
 };
 
 template <class T>
-class DequeIterator : public std::iterator < std::forward_iterator_tag, T > {
+class Iterator : public std::iterator < std::forward_iterator_tag, T > {
 public:
-DequeIterator(Node<T> *p);
+	Iterator(Node<T> *p);
+	
 
 private:
-Node<T> *current;
+	Node<T> *current;
 };
 
 template <class T>
-class Deque {
-	typedef DequeIterator<T> iterator;
-
+class Deque {	
 public:
 	Deque();								// Default constructor
 	~Deque();								// Deconstructor
@@ -35,8 +34,8 @@ public:
 	void addLast(const T &item);			// Adds an item to the end of the deque
 	T removeFirst();						// Removes an item from the beginning of the deque
 	T removeLast();							// Removes an item from the end of the deque
-	iterator begin();						// Returns iterator at beginning of deque
-	iterator end();							// Returns iterator at end of deque	
+	Iterator<T> begin();						// Returns iterator at beginning of deque
+	Iterator<T> end();							// Returns iterator at end of deque	
 	
 private:	
 	Node<T> *first, *last;
@@ -177,14 +176,14 @@ template <class T> T Deque<T>::removeLast() {
 	return t_item;
 }
 
-template <class T> DequeIterator<T> Deque<T>::begin() {
-	iterator iter;
-	iter.position = first;
-	return iter;
+template <class T> Iterator<T>::Iterator(Node<T> *p) : current(p) {
+
 }
 
-template <class T> DequeIterator<T> Deque<T>::end() {
-	iterator iter;
-	iter.position = NULL;
-	return iter;
+template <class T> Iterator<T> Deque<T>::begin() {
+	return Iterator<T>(first);
+}
+
+template <class T> Iterator<T> Deque<T>::end() {
+	return Iterator<T>(last->next);
 }
