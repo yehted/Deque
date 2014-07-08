@@ -1,9 +1,29 @@
 #include <stdexcept>
 #include <iterator>
 
-template <class Item>
+template <class T> 
+class Node {	
+public:
+	T item;
+	Node *next;
+	Node *prev;
+	Node();				// Empty constructor
+	Node(T item);	// Constructor
+};
+
+template <class T>
+class DequeIterator : public std::iterator < std::forward_iterator_tag, T > {
+public:
+DequeIterator(Node<T> *p);
+
+private:
+Node<T> *current;
+};
+
+template <class T>
 class Deque {
-	//friend class Iterator < Item > ;
+	typedef DequeIterator<T> iterator;
+
 public:
 	Deque();								// Default constructor
 	~Deque();								// Deconstructor
@@ -11,37 +31,38 @@ public:
 	Deque &operator=(const Deque &that);	// Assignment operator
 	bool isEmpty();							// Checks if deque is empty
 	int size();								// Returns number of items in deque
-	void addFirst(const Item &item);		// Adds an item to the beginning of the deque
-	void addLast(const Item &item);			// Adds an item to the end of the deque
-	Item removeFirst();						// Removes an item from the beginning of the deque
-	Item removeLast();						// Removes an item from the end of the deque
-
-	class iterator {
-	public:
-		iterator(Item *ptr);
-		void next();
-	};
-private:
-	class Node {
-	public:
-		Item item;
-		Node *next;
-		Node *prev;
-	};
-	Node *first, *last;
+	void addFirst(const T &item);			// Adds an item to the beginning of the deque
+	void addLast(const T &item);			// Adds an item to the end of the deque
+	T removeFirst();						// Removes an item from the beginning of the deque
+	T removeLast();							// Removes an item from the end of the deque
+	iterator begin();						// Returns iterator at beginning of deque
+	iterator end();							// Returns iterator at end of deque	
+	
+private:	
+	Node<T> *first, *last;
 	int N;
 };
 
 // Implementation
 
+// Empty Node constructor
+template <class T> Node<T>::Node() : next(NULL), prev(NULL) {
+
+}
+
+// Node constructor
+template <class T> Node<T>::Node(T item) : next(NULL), prev(NULL) {
+	this->item = item;
+}
+
 // Default constructor
-template <class Item> Deque<Item>::Deque() : first(NULL), last(NULL), N(0) {
+template <class T> Deque<T>::Deque() : first(NULL), last(NULL), N(0) {
 	
 }
 
 // Destructor
-template <class Item> Deque<Item>::~Deque() {
-	Node *current;
+template <class T> Deque<T>::~Deque() {
+	Node<T> *current;
 	while (first != NULL) {
 		current = first;
 		first = first->next;
@@ -50,13 +71,13 @@ template <class Item> Deque<Item>::~Deque() {
 }
 
 // Copy constructor
-template <class Item> Deque<Item>::Deque(const Deque &that) : N(0), first(NULL), last(NULL) {
+template <class T> Deque<T>::Deque(const Deque &that) : N(0), first(NULL), last(NULL) {
 	
-	Node *current = that.first;	
-	Node *t_prev = NULL;
+	Node<T> *current = that.first;	
+	Node<T> *t_prev = NULL;
 	
 	while (current != NULL) {
-		Node *tmp = new Node;
+		Node<T> *tmp = new Node<T>;
 		if (N == 0) first = tmp;
 		
 		tmp->item = current->item;
@@ -75,11 +96,11 @@ template <class Item> Deque<Item>::Deque(const Deque &that) : N(0), first(NULL),
 }
 
 // Copy assignment operator
-template <class Item> Deque<Item> & Deque<Item>::operator=(const Deque &that) {
+template <class T> Deque<T> & Deque<T>::operator=(const Deque &that) {
 	if (this == &that) return *this;
 	
 	// Creates copy
-	Deque<Item> tmp(that);
+	Deque<T> tmp(that);
 	
 	// Assigns elements
 	first = tmp.first;
@@ -94,83 +115,76 @@ template <class Item> Deque<Item> & Deque<Item>::operator=(const Deque &that) {
 	return *this;
 }
 
-template <class Item> bool Deque<Item>::isEmpty() {
+template <class T> bool Deque<T>::isEmpty() {
 	return (N == 0);
 }
 
-template <class Item> int Deque<Item>::size() {
+template <class T> int Deque<T>::size() {
 	return N;
 }
 
-template <class Item> void Deque<Item>::addFirst(const Item &item) {
+template <class T> void Deque<T>::addFirst(const T &item) {
 	if (&item == NULL) { throw std::out_of_range("Null pointer exception"); }
-	if (isEmpty()) {
-		first = new Node;
-		last = first;
-		first->next = NULL;
-	}
-	else {
-		Node *oldfirst = first;
-		first = new Node;
-		first->next = oldfirst;
-		oldfirst->prev = first;
-	}
-	first->item = item;
-	first->prev = NULL;
+	
+	Node<T> *newNode = new Node < T >(item) ;	
+	newNode->next = first;	
+	if (!isEmpty())
+		first->prev = newNode;
+	else
+		last = newNode;
+	first = newNode;
 	N++;
 }
 
-template <class Item> void Deque<Item>::addLast(const Item &item) {
+template <class T> void Deque<T>::addLast(const T &item) {
 	if (&item == NULL) { throw std::out_of_range("Null pointer exception"); }
-	if (isEmpty()) {
-		last = new Node;
-		first = last;
-		last->prev = NULL;
-	}
-	else {
-		Node *oldlast = last;
-		last = new Node;
-		last->prev = oldlast;
-		oldlast->next = last;
-	}
-	last->item = item;
-	last->next = NULL;
-	N++;
+
+	Node<T> *newNode = new Node < T >(item) ;
+	newNode->prev = last;	
+	if (!isEmpty())
+		last->next = newNode;
+	else
+		first = newNode;
+	last = newNode;
+	N++;	
 }
 
-template <class Item> Item Deque<Item>::removeFirst() {
+template <class T> T Deque<T>::removeFirst() {
 	if (isEmpty()) { throw std::out_of_range("Stack underflow"); }
-	Item t_item = first->item;
-	Node *tmp = first->next;
+	T t_item = first->item;
+	Node<T> *tmp = first->next;
 	delete first;
 	first = tmp;
 	N--;
-	if (N == 0) {
+	if (isEmpty()) 
 		last = NULL;
-		return t_item;
-	}
-	first->prev = NULL;	
+	else	
+		first->prev = NULL;	
 	return t_item;
 }
 
-template <class Item> Item Deque<Item>::removeLast() {
+template <class T> T Deque<T>::removeLast() {
 	if (isEmpty()) { throw std::out_of_range("Stack underflow"); }
-	Item t_item = last->item;
-	Node *tmp = last->prev;
+	T t_item = last->item;
+	Node<T> *tmp = last->prev;
 	delete last;
 	last = tmp;
 	N--;
-	if (N == 0) {
+	if (N == 0) 
 		first = NULL;
-		return t_item;
-	}
-	last->next = NULL;
+	else
+		last->next = NULL;
 	return t_item;
 }
 
-/*template <class Item> Deque<Item>::begin() {
-	Iterator iter;
+template <class T> DequeIterator<T> Deque<T>::begin() {
+	iterator iter;
 	iter.position = first;
-	iter.last = last;
 	return iter;
-}*/
+}
+
+template <class T> DequeIterator<T> Deque<T>::end() {
+	iterator iter;
+	iter.position = NULL;
+	return iter;
+}
