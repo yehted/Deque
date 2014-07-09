@@ -15,7 +15,7 @@ int main() {
 	for (int i = 0; i < k; i++) {
 		cin >> item;
 		RQ.enqueue(item);
-		DQ.addLast(item);
+		DQ.addFirst(item);
 	}
 	Deque<string> c_DQ;
 	c_DQ = DQ;
