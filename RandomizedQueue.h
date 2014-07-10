@@ -1,21 +1,46 @@
 #include <stdexcept>
+#include <iterator>
 #include <time.h>
 
-template <class Item>
+template <class T>
 class RandomizedQueue{
 public:
+	class Iterator;
+
 	RandomizedQueue();				// default constructor
 	~RandomizedQueue();				// deconstructor
 	RandomizedQueue(const RandomizedQueue &that);	// copy constructor
 	RandomizedQueue &operator=(const RandomizedQueue &that);	// assignment operator
 	bool isEmpty();					// checks if queue is empty
 	int size();						// returns number of items in queue
-	void enqueue(const Item &item);	// adds an item to the queue
-	Item dequeue();					// randomly removes an item from queue
-	Item sample();					// returns a random item, but does not remove it
+	void enqueue(const T &item);	// adds an item to the queue
+	T dequeue();					// randomly removes an item from queue
+	T sample();						// returns a random item, but does not remove it
+	Iterator begin();
+	Iterator end();
+
+	class Iterator : public std::iterator < std::forward_iterator_tag, T > {
+	public:
+		Iterator();
+		~Iterator();
+		Iterator(T* p);
+		Iterator(const Iterator &other);
+		Iterator &operator=(const Iterator &other);
+
+		Iterator &operator++();
+		Iterator operator++(int);
+		bool operator==(const Iterator &other);
+		bool operator!=(const Iterator &other);
+
+		T& operator*();
+		T* operator->();
+		
+	private:
+		T *pos;
+	};
 
 private:
-	Item *a;						// queue stored in dynamically allocated array
+	T *a;						// queue stored in dynamically allocated array
 	int N;							// number of items in queue
 	int cap;						// capacity of the array
 	void resize(int capacity);		// resizes the array
@@ -23,30 +48,30 @@ private:
 
 // Implementation
 
-template <class Item> RandomizedQueue<Item>::RandomizedQueue() : N(0), cap(2) {
+template <class T> RandomizedQueue<T>::RandomizedQueue() : N(0), cap(2) {
 	srand((unsigned int)time(NULL));
-	a = new Item[2];
+	a = new T[2];
 }
 
-template <class Item> RandomizedQueue<Item>::~RandomizedQueue() {
+template <class T> RandomizedQueue<T>::~RandomizedQueue() {
 	delete[] a;
 }
 
-template <class Item> RandomizedQueue<Item>::RandomizedQueue(const RandomizedQueue &that) : a(new Item[that.N]),
+template <class T> RandomizedQueue<T>::RandomizedQueue(const RandomizedQueue &that) : a(new T[that.N]),
 N(that.N), cap(that.cap)
 {
 	for (int i = 0; i < that.N; i++)
 		a[i] = that.a[i];
 }
 
-template <class Item> RandomizedQueue<Item> & RandomizedQueue<Item>::operator=(const RandomizedQueue &that) {
+template <class T> RandomizedQueue<T> & RandomizedQueue<T>::operator=(const RandomizedQueue &that) {
 	if (this == &that) return *this;
 
 	// Deallocate old memory
 	delete[] a;
 
 	// Allocate new memory
-	Item *new_a = new Item[that.N];
+	T *new_a = new T[that.N];
 
 	// Copy elements
 	for (int i = 0; i < that.N; i++)
@@ -60,22 +85,22 @@ template <class Item> RandomizedQueue<Item> & RandomizedQueue<Item>::operator=(c
 	return *this;
 }
 
-template <class Item> bool RandomizedQueue<Item>::isEmpty() {
+template <class T> bool RandomizedQueue<T>::isEmpty() {
 	return (N == 0);
 }
 
-template <class Item> int RandomizedQueue<Item>::size() {
+template <class T> int RandomizedQueue<T>::size() {
 	return N;
 }
 
-template <class Item> void RandomizedQueue<Item>::enqueue(const Item &item) {
+template <class T> void RandomizedQueue<T>::enqueue(const T &item) {
 	if (&item == NULL) throw std::invalid_argument("Null pointer exception");
 	if (N == cap) resize(2 * cap);
 	a[N++] = item;
 }
 
-template <class Item> void RandomizedQueue<Item>::resize(int capacity) {
-	Item *new_a = new Item[capacity];
+template <class T> void RandomizedQueue<T>::resize(int capacity) {
+	T *new_a = new T[capacity];
 	for (int i = 0; i < N; i++)
 		new_a[i] = a[i];
 
@@ -84,11 +109,11 @@ template <class Item> void RandomizedQueue<Item>::resize(int capacity) {
 	cap = capacity;
 }
 
-template <class Item> Item RandomizedQueue<Item>::dequeue() {
+template <class T> T RandomizedQueue<T>::dequeue() {
 	if (isEmpty()) throw std::underflow_error("Stack underflow");	// Check whats up with this line
 
 	int x = rand() % N;
-	Item answer = a[x];
+	T answer = a[x];
 	
 	a[x] = a[--N];
 	
@@ -97,7 +122,7 @@ template <class Item> Item RandomizedQueue<Item>::dequeue() {
 	return answer;
 }
 
-template <class Item> Item RandomizedQueue<Item>::sample() {
+template <class T> T RandomizedQueue<T>::sample() {
 	if (isEmpty()) throw std::underflow_error("Stack underflow");
 
 	int x = rand() % N;

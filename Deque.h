@@ -24,6 +24,7 @@ public:
 	class Iterator : public std::iterator < std::forward_iterator_tag, T >	{
 	public:
 		Iterator() : p_(NULL) {}
+		~Iterator() {}
 		Iterator(Node* p) : p_(p) {}
 		Iterator(const Iterator &other) : p_(other.p_) {}
 		Iterator &operator=(const Iterator &other) { p_ = other.p_; return *this; }
@@ -33,7 +34,11 @@ public:
 		bool operator==(const Iterator &other) { return p_ == other.p_; }
 		bool operator!=(const Iterator &other) { return p_ != other.p_; }
 
-		Node* operator()(){ return p_; }
+		T* operator->(){
+			Iterator tmp = *this;
+			T& value = *tmp;
+			return (&value);
+		}
 		T &operator*(){ return p_->item; }
 
 	private:
@@ -175,7 +180,3 @@ template <class T> T Deque<T>::removeLast() {
 		last->next = NULL;
 	return t_item;
 }
-
-//template <class T> Deque<T>::Node::Node() : next(NULL), prev(NULL) {}
-
-//template <class T> Deque<T>::Node::Node(T item) : next(NULL), prev(NULL), item(item) {}
