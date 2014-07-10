@@ -22,3 +22,5 @@ This project implements a double ended queue (dequeue) and a randomized queue in
 ## Todo list ##
 * Check if I need to write StdRandom for Knuth shuffle
 * Implement iterators - done(ish)
+* Clean up iterator implementation
+* Check for_each functionality
