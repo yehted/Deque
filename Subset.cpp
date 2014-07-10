@@ -26,6 +26,8 @@ int main() {
 		cout << RQ.dequeue() << endl;
 	}
 	typedef Deque<string> my_Deque;
-	for (my_Deque::iterator iter = DQ.begin(); iter != DQ.end(); ++DQ)
+	cout << "Iterator test" << endl;
+	for (my_Deque::Iterator iter = DQ.begin(); iter != DQ.end(); ++iter)
+		cout << *iter << endl;
 	return 0;
 }

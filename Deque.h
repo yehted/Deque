@@ -4,8 +4,10 @@
 template <class T>
 class Deque {	
 	class Node;
-	class iterator;
+
 public:
+	class Iterator;
+
 	Deque();								// Default constructor
 	~Deque();								// Deconstructor
 	Deque(const Deque &that);				// Copy constructor
@@ -16,33 +18,33 @@ public:
 	void addLast(const T &item);			// Adds an item to the end of the deque
 	T removeFirst();						// Removes an item from the beginning of the deque
 	T removeLast();							// Removes an item from the end of the deque
-	iterator begin() { return iterator(first); }
-	iterator end() { return iterator(NULL); }
+	Iterator begin() { return Iterator(first); }
+	Iterator end() { return Iterator(NULL); }
 
-	class iterator : public std::iterator < std::forward_iterator_tag, T >	{		
+	class Iterator : public std::iterator < std::forward_iterator_tag, T >	{
 	public:
-		iterator() : p_(NULL) {}
-		iterator(Node* p) : p_(p) {}
-		iterator(const iterator &other) : p_(other.p_) {}
-		const iterator &operator=(const iterator &other) { p_ = other.p_; return *this; }
+		Iterator() : p_(NULL) {}
+		Iterator(Node* p) : p_(p) {}
+		Iterator(const Iterator &other) : p_(other.p_) {}
+		Iterator &operator=(const Iterator &other) { p_ = other.p_; return *this; }
 
-		iterator &operator++()	{ p_ = p_->next; return this*; }	// prefix++
-		iterator operator++(int) { Node* previous = p_; p_ = p->next; return iterator(previous); }
-		bool operator==(const iterator &other) { return p_ == other.p_; }
-		bool operator!=(const iterator &other) { return p != other.p_; }
+		Iterator &operator++()	{ p_ = p_->next; return *this; }	// prefix++
+		Iterator operator++(int) { Node* previous = p_; p_ = p_->next; return Iterator(previous); }
+		bool operator==(const Iterator &other) { return p_ == other.p_; }
+		bool operator!=(const Iterator &other) { return p_ != other.p_; }
 
 		Node* operator()(){ return p_; }
-		T operator*(){ return p_->item; }
-		
+		T &operator*(){ return p_->item; }
+
 	private:
 		Node* p_;
 	};
 	
 private:
-	class Node {		
+	class Node {	
 	public:
-		Node();
-		Node(T item);
+		Node() : next(NULL), prev(NULL) {}
+		Node(T item) : next(NULL), prev(NULL), item(item) {}
 		T item;
 		Node* next;
 		Node* prev;		
@@ -174,6 +176,6 @@ template <class T> T Deque<T>::removeLast() {
 	return t_item;
 }
 
-template <class T> Deque<T>::Node::Node() : next(NULL), prev(NULL) {}
+//template <class T> Deque<T>::Node::Node() : next(NULL), prev(NULL) {}
 
-template <class T> Deque<T>::Node::Node(T item) : next(NULL), prev(NULL), item(item) {}
+//template <class T> Deque<T>::Node::Node(T item) : next(NULL), prev(NULL), item(item) {}
