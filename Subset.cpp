@@ -2,6 +2,7 @@
 #include "Deque.h"
 #include <iostream>
 #include <string>
+#include <algorithm>
 
 using namespace std;
 
@@ -22,7 +23,9 @@ int main() {
 	
 	cout << "Deque" << "\t" << "RQ" << endl;
 	for (int i = 0; i < k; i++) {
-		cout << c_DQ.removeLast() << "\t" << DQ.removeFirst() << endl;
+		cout << RQ.dequeue() << endl;
 	}
+	typedef Deque<string> my_Deque;
+	for (my_Deque::iterator iter = DQ.begin(); iter != DQ.end(); ++DQ)
 	return 0;
 }

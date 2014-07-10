@@ -2,8 +2,9 @@
 #include <iterator>
 
 template <class T>
-class Deque : public std::iterator<std::forward_iterator_tag, T> {	
-	
+class Deque {	
+	class Node;
+	class iterator;
 public:
 	Deque();								// Default constructor
 	~Deque();								// Deconstructor
@@ -15,6 +16,27 @@ public:
 	void addLast(const T &item);			// Adds an item to the end of the deque
 	T removeFirst();						// Removes an item from the beginning of the deque
 	T removeLast();							// Removes an item from the end of the deque
+	iterator begin() { return iterator(first); }
+	iterator end() { return iterator(NULL); }
+
+	class iterator : public std::iterator < std::forward_iterator_tag, T >	{		
+	public:
+		iterator() : p_(NULL) {}
+		iterator(Node* p) : p_(p) {}
+		iterator(const iterator &other) : p_(other.p_) {}
+		const iterator &operator=(const iterator &other) { p_ = other.p_; return *this; }
+
+		iterator &operator++()	{ p_ = p_->next; return this*; }	// prefix++
+		iterator operator++(int) { Node* previous = p_; p_ = p->next; return iterator(previous); }
+		bool operator==(const iterator &other) { return p_ == other.p_; }
+		bool operator!=(const iterator &other) { return p != other.p_; }
+
+		Node* operator()(){ return p_; }
+		T operator*(){ return p_->item; }
+		
+	private:
+		Node* p_;
+	};
 	
 private:
 	class Node {		
