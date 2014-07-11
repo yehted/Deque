@@ -23,23 +23,23 @@ public:
 
 	class Iterator : public std::iterator < std::forward_iterator_tag, T >	{
 	public:
-		Iterator() : p_(NULL) {}
-		~Iterator() {}
-		Iterator(Node* p) : p_(p) {}
-		Iterator(const Iterator &other) : p_(other.p_) {}
-		Iterator &operator=(const Iterator &other) { p_ = other.p_; return *this; }
+		Iterator() : p_(NULL) {}			// Default constructor
+		~Iterator() {}						// Destructor
+		Iterator(Node* p) : p_(p) {}		// Single argument constructor
+		Iterator(const Iterator &other) : p_(other.p_) {}	// Copy constructor
+		Iterator &operator=(const Iterator &other) { p_ = other.p_; return *this; }	// Copy assignment operator
 
 		Iterator &operator++()	{ p_ = p_->next; return *this; }	// prefix++
-		Iterator operator++(int) { Node* previous = p_; p_ = p_->next; return Iterator(previous); }
-		bool operator==(const Iterator &other) { return p_ == other.p_; }
-		bool operator!=(const Iterator &other) { return p_ != other.p_; }
+		Iterator operator++(int) { Node* previous = p_; p_ = p_->next; return Iterator(previous); }	// postfix++
+		bool operator==(const Iterator &other) { return p_ == other.p_; }	// Equals operator
+		bool operator!=(const Iterator &other) { return p_ != other.p_; }	// Not equals operator
 
+		T &operator*(){ return p_->item; }	// Dereference
 		T* operator->(){
 			Iterator tmp = *this;
 			T& value = *tmp;
 			return (&value);
-		}
-		T &operator*(){ return p_->item; }
+		}		
 
 	private:
 		Node* p_;

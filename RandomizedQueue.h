@@ -16,31 +16,49 @@ public:
 	void enqueue(const T &item);	// adds an item to the queue
 	T dequeue();					// randomly removes an item from queue
 	T sample();						// returns a random item, but does not remove it
-	Iterator begin();
-	Iterator end();
+	Iterator begin() { return Iterator(a); }
+	Iterator end() { return Iterator(a + N); }
 
 	class Iterator : public std::iterator < std::forward_iterator_tag, T > {
 	public:
-		Iterator();
-		~Iterator();
-		Iterator(T* p);
-		Iterator(const Iterator &other);
-		Iterator &operator=(const Iterator &other);
+		Iterator() {
+			it = N;
+			srand((unsigned int)time(NULL));
+			copy = new int[N];
+			for (int i = 0; i < N; i++)
+				copy[i] = i;
+			shuffle(copy, N);
+		}
+		~Iterator() { }
+		Iterator(T* p) : pos(p) {}
+		Iterator(const Iterator &other) : pos(other.pos) {
+			it = N;
+			srand((unsigned int)time(NULL));
+			copy = new int[N];
+			for (int i = 0; i < N; i++)
+				copy[i] = i;
+			shuffle(copy, N);
+			for (int i = 0; i < N; i++)
+				cout << copy[i] << " ";
+		}
+		Iterator &operator=(const Iterator &other) { pos = other.pos; return *this; }
 
-		Iterator &operator++();
-		Iterator operator++(int);
-		bool operator==(const Iterator &other);
-		bool operator!=(const Iterator &other);
+		Iterator &operator++() { return Iterator(pos + copy[--i_]); } // prefix++
+		Iterator operator++(int) { Iterator tmp = pos; pos++; return tmp; } // postfix++
+		bool operator==(const Iterator &other) { return pos == other.pos; }
+		bool operator!=(const Iterator &other) { return pos != other.pos; }
 
-		T& operator*();
-		T* operator->();
+		T& operator*() { return *pos; }
+		T* operator->() { return pos; }
 		
 	private:
-		T *pos;
+		T* pos;
+		int* copy;
+		int i_;
 	};
 
 private:
-	T *a;						// queue stored in dynamically allocated array
+	T *a;							// queue stored in dynamically allocated array
 	int N;							// number of items in queue
 	int cap;						// capacity of the array
 	void resize(int capacity);		// resizes the array
@@ -129,3 +147,15 @@ template <class T> T RandomizedQueue<T>::sample() {
 	return a[x];
 }
 
+int uniform(int N) {
+	return rand() % N;
+}
+
+void shuffle(int* arr, int N){
+	for (int i = 0; i < N; i++) {
+		int r = i + uniform(N - i);
+		int temp = arr[i];
+		arr[i] = arr[r];
+		arr[r] = temp;
+	}
+}
