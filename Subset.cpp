@@ -29,7 +29,10 @@ int main() {
 	cout << "Iterator test" << endl;
 	for (my_Deque::Iterator iter = DQ.begin(); iter != DQ.end(); ++iter)
 		cout << *iter << endl;
-	for (RandomizedQueue<string>::Iterator it = RQ.begin(); it != RQ.end(); ++it)
-		cout << *it << endl;
+	cout << endl;
+	for (RandomizedQueue<string>::Iterator it = RQ.begin(); 
+		it != RQ.end(); 
+		++it)
+		cout << *it << " ";
 	return 0;
 }
