@@ -25,9 +25,8 @@ int main() {
 	//for (int i = 0; i < k; i++) {
 	//	cout << RQ.dequeue() << endl;
 	//}
-	typedef Deque<string> my_Deque;
 	cout << "Iterator test" << endl;
-	for (my_Deque::Iterator iter = DQ.begin(); iter != DQ.end(); ++iter)
+	for (Deque<string>::Iterator iter = DQ.begin(); iter != DQ.end(); ++iter)
 		cout << *iter << endl;
 	cout << endl;
 	for (RandomizedQueue<string>::Iterator it = RQ.begin(); 

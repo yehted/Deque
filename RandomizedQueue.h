@@ -16,14 +16,29 @@ public:
 	void enqueue(const T &item);	// adds an item to the queue
 	T dequeue();					// randomly removes an item from queue
 	T sample();						// returns a random item, but does not remove it
-	Iterator begin() { return Iterator(*this, N); }
-	Iterator end() { return Iterator(*this, 0); }
+	Iterator begin() { return Iterator(a, 0); }
+	Iterator end() { return Iterator(a, N); }
 
 	class Iterator : public std::iterator < std::forward_iterator_tag, T > {
 	public:
 		Iterator() {}
 		~Iterator() {}
-		Iterator(const RandomizedQueue& other, int N) : parent_(other), pos_(N) {
+		Iterator(T* &other, int N) : begin_(other), pos_(N) {
+		
+			srand((unsigned int)time(NULL));
+			copy = new int[N];				
+			for (int i = 0; i < N; i++)
+				copy[i] = i;
+			shuffle(copy, N);
+			cout << "RQ Iterator" << endl;
+			for (int i = 0; i < N; i++)
+				cout << copy[i] << " ";
+		
+		}
+		Iterator(const Iterator &other) {	// Copy constructor			
+			cout << "Hi copy" << endl;
+			pos_ = other.pos_;			
+			
 			srand((unsigned int)time(NULL));
 			copy = new int[N];
 			for (int i = 0; i < N; i++)
@@ -31,26 +46,21 @@ public:
 			shuffle(copy, N);
 			cout << "RQ Iterator" << endl;
 			for (int i = 0; i < N; i++)
-				cout << copy[i] << " ";
-		}
-		Iterator(const Iterator &other) {	// Copy constructor
-			parent_ = other.parent_;
-			pos_ = other.pos_;
-			cout << "Hi " << endl;
+				cout << copy[i] << " ";			
 		}
 		Iterator &operator=(const Iterator &other) { 
+			cout << "Hi assignment" << endl;
 			delete[]copy;
 			int* new_copy = new int[other.N_];
 			for (int i = 0; i < other.N_; i++)
 				new_copy[i] = other.copy[i];
 			copy = new_copy;
 			pos_ = other.pos_;
-//			N_ = other.N_;
 			return *this; 
 		}
 
 		Iterator &operator++() {	// prefix++
-			pos_--;
+			pos_++;
 			return *this;
 		} 
 //		Iterator operator++(int) { Iterator tmp = parent_; parent_++; return tmp; } // postfix++
@@ -58,15 +68,15 @@ public:
 		bool operator==(const Iterator &other) { return pos_ == other.pos_; }
 		bool operator!=(const Iterator &other) { return pos_ != other.pos_; }
 		
-		T& operator*() { return parent_.a[copy[pos_]]; }
+		T& operator*() { return *(begin_ + copy[pos_]); }
 		T* operator->() { return pos_; }
 		
+		void createCopy();
+
 	private:
-		int* copy;
+		const int* copy;
 		int pos_;
-//		int i_;
-//		int N_;
-		const RandomizedQueue& parent_;
+		T* begin_;
 	};
 
 private:
