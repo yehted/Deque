@@ -70,52 +70,42 @@ template <class T> Deque<T>::~Deque() {
 	while (first != NULL) {
 		current = first;
 		first = first->next;
-		delete current;		
-	}
+		delete current;
+		N--;
+	}	
+	last = NULL;
 }
 
 // Copy constructor
-template <class T> Deque<T>::Deque(const Deque &that) : N(0), first(NULL), last(NULL) {
-	
-	Node *current = that.first;	
-	Node *t_prev = NULL;
-	
+template <class T> Deque<T>::Deque(const Deque &that) : N(0), first(NULL), last(NULL) {	
+	Node* current = that.first;
 	while (current != NULL) {
-		Node *tmp = new Node;
-		if (N == 0) first = tmp;
-		
-		tmp->item = current->item;
-		tmp->prev = t_prev;
-		if (t_prev != NULL) t_prev->next = tmp;
-			
-		t_prev = tmp;
+		addLast(current->item);
 		current = current->next;
-		N++;
-	}
-	last = t_prev;
-	if (t_prev != NULL) t_prev->next = NULL;
-	if (N != that.N)
-		cerr << "Error, copy constructor did not work!" << endl;
-	
+	}	
 }
 
 // Copy assignment operator
 template <class T> Deque<T> & Deque<T>::operator=(const Deque &that) {
 	if (this == &that) return *this;
-	this->~Deque();
-	// Creates copy
-	Deque tmp(that);
 	
-	// Assigns elements
-	first = tmp.first;
-	last = tmp.last;
-	N = tmp.N;
+	// Deletes current object
+	Node* current;
+	while (first != NULL) {
+		current = first;
+		first = first->next;
+		delete current;
+		N--;
+	}
+	last = NULL;
 
-	// Deletes pointers to copy
-//	tmp.first = NULL;
-//	tmp.last = NULL;
-//	tmp.N = 0;
-
+	// Creates copy
+	current = that.first;
+	while (current != NULL) {
+		addLast(current->item);
+		current = current->next;
+	}
+		
 	return *this;
 }
 

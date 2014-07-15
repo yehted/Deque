@@ -1,5 +1,6 @@
 #include <stdexcept>
 #include <iterator>
+#include <vector>
 #include <time.h>
 
 template <class T>
@@ -24,7 +25,7 @@ public:
 		Iterator() {}
 		~Iterator() {}
 		Iterator(T* &other, int N) : begin_(other), pos_(N) {
-			if (N > 0) createCopy(N);
+			copy = createCopy(N);
 		}
 		Iterator(int N) : pos_(N) {}
 		Iterator(const Iterator &other) {	// Copy constructor			
@@ -46,16 +47,18 @@ public:
 		T& operator*() { return *(begin_ + copy[pos_ - 1]); }
 		T* operator->() { return pos_; }
 		
-		void createCopy(int N) {
+		int* createCopy(int N) {
+			if (N == 0) return NULL;
 			srand((unsigned int)time(NULL));
-			copy = new int[N];
+			int* tmp = new int[N];
 			for (int i = 0; i < N; i++)
-				copy[i] = i;
-			shuffle(copy, N);
-			cout << "RQ Iterator" << endl;
-			for (int i = 0; i < N; i++)
-				cout << copy[i] << " ";
-			cout << endl;
+				tmp[i] = i;
+			shuffle(tmp, N);
+			return tmp;
+	//		cout << "RQ Iterator" << endl;
+	//		for (int i = 0; i < N; i++)
+	//			cout << copy[i] << " ";
+	//		cout << endl;
 		}
 
 	private:
