@@ -1,6 +1,5 @@
 #include <stdexcept>
 #include <iterator>
-#include <vector>
 #include <time.h>
 
 template <class T>
@@ -28,11 +27,22 @@ public:
 			copy = createCopy(N);
 		}
 		Iterator(int N) : pos_(N) {}
-		Iterator(const Iterator &other) {	// Copy constructor			
-			cout << "Hi copy" << endl;			
+		Iterator(const Iterator &other) : pos_(other.pos_), begin_(other.begin_) {	// Copy constructor			
+			cout << "Copying iterator" << endl;
+			for (int i = 0; i < other.pos_; i++)
+				copy[i] = other.copy[i];
 		}
 		Iterator &operator=(const Iterator &other) { // Copy assignment operator
-			cout << "Hi assignment" << endl;
+			cout << "Assigning iterator" << endl;
+			if (&other == this) return *this;
+			delete[] copy;
+			int* n_copy = new int[other.pos_];
+			for (int i = 0; i < other.pos_; i++)
+				n_copy[i] = other.copy[i];
+			copy = n_copy;
+			begin_ = other.begin_;
+			pos_ = other.pos_;
+			return *this;
 		}
 
 		Iterator &operator++() {	// prefix++
@@ -48,17 +58,17 @@ public:
 		T* operator->() { return pos_; }
 		
 		int* createCopy(int N) {
-			if (N == 0) return NULL;
-			srand((unsigned int)time(NULL));
+			if (N == 0) return NULL;			
 			int* tmp = new int[N];
 			for (int i = 0; i < N; i++)
 				tmp[i] = i;
 			shuffle(tmp, N);
+			/* Outputs iterator for checking
+			cout << "RQ Iterator" << endl;
+			for (int i = 0; i < N; i++)
+				cout << tmp[i] << " ";
+			cout << endl;	*/
 			return tmp;
-	//		cout << "RQ Iterator" << endl;
-	//		for (int i = 0; i < N; i++)
-	//			cout << copy[i] << " ";
-	//		cout << endl;
 		}
 
 	private:
