@@ -70,7 +70,7 @@ template <class T> Deque<T>::~Deque() {
 	while (first != NULL) {
 		current = first;
 		first = first->next;
-		delete current;
+		delete current;		
 	}
 }
 
@@ -102,7 +102,7 @@ template <class T> Deque<T>::Deque(const Deque &that) : N(0), first(NULL), last(
 // Copy assignment operator
 template <class T> Deque<T> & Deque<T>::operator=(const Deque &that) {
 	if (this == &that) return *this;
-	
+	this->~Deque();
 	// Creates copy
 	Deque tmp(that);
 	
@@ -112,9 +112,9 @@ template <class T> Deque<T> & Deque<T>::operator=(const Deque &that) {
 	N = tmp.N;
 
 	// Deletes pointers to copy
-	tmp.first = NULL;
-	tmp.last = NULL;
-	tmp.N = 0;
+//	tmp.first = NULL;
+//	tmp.last = NULL;
+//	tmp.N = 0;
 
 	return *this;
 }
@@ -130,9 +130,9 @@ template <class T> int Deque<T>::size() {
 template <class T> void Deque<T>::addFirst(const T &item) {
 	if (&item == NULL) { throw std::out_of_range("Null pointer exception"); }
 	
-	Node *newNode = new Node(item) ;	
-	newNode->next = first;	
-	if (!isEmpty())
+	Node *newNode = new Node(item) ;
+	newNode->next = first;
+	if (!isEmpty()) 
 		first->prev = newNode;
 	else
 		last = newNode;
