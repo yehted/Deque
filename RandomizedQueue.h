@@ -16,8 +16,8 @@ public:
 	void enqueue(const T &item);	// adds an item to the queue
 	T dequeue();					// randomly removes an item from queue
 	T sample();						// returns a random item, but does not remove it
-	Iterator begin() { return Iterator(a, 0); }
-	Iterator end() { return Iterator(a, N); }
+	Iterator begin() { return Iterator(a, N); }
+	Iterator end() { return Iterator(0); }
 
 	class Iterator : public std::iterator < std::forward_iterator_tag, T > {
 	public:
@@ -35,6 +35,7 @@ public:
 				cout << copy[i] << " ";
 		
 		}
+		Iterator(int N) : pos_(N) {}
 		Iterator(const Iterator &other) {	// Copy constructor			
 			cout << "Hi copy" << endl;
 			pos_ = other.pos_;			
@@ -74,7 +75,7 @@ public:
 		void createCopy();
 
 	private:
-		const int* copy;
+		int* copy;
 		int pos_;
 		T* begin_;
 	};
