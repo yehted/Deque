@@ -18,9 +18,13 @@ This project implements a double ended queue (dequeue) and a randomized queue in
 3. If you need to forward declare it, make sure the declaration is PUBLIC
 4. Implement all of the things necessary for that type of iterator (input, output, forward, etc.)
 5. Make sure you write a begin() and end() for your container that returns an iterator
+6. For randomized queue, shuffle was not random because I was calling srand((unsigned int)time(NULL)) too often
 
 ## Todo list ##
-* Check if I need to write StdRandom for Knuth shuffle
-* Implement iterators - done(ish)
-* Clean up iterator implementation
-* Check for_each functionality
+* Check if I need to write StdRandom for Knuth shuffle - done
+* Implement iterators - done
+* Clean up iterator implementation - done
+* Check for_each functionality - done
+
+## Other thoughts ##
+* I thought I had memory leaks with _CRT package, but when I downloaded VLD (hence the #include "vld.h"), it said no memory leaks. So maybe the compiler is fixing it?
