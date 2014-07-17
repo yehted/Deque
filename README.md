@@ -17,8 +17,8 @@ This project implements a double ended queue (dequeue) and a randomized queue in
 2. Put it inside your container class - there is no reason to put it outside when the container is the only thing that will be accessing it.
 3. If you need to forward declare it, make sure the declaration is PUBLIC
 4. Implement all of the things necessary for that type of iterator (input, output, forward, etc.)
-5. Make sure you write a begin() and end() for your container that returns an iterator
-6. For randomized queue, shuffle was not random because I was calling srand((unsigned int)time(NULL)) too often
+5. Make sure you write a `begin()` and `end()` for your container that returns an iterator
+6. For randomized queue, shuffle was not random because I was calling `srand((unsigned int)time(NULL))` too often
 
 ## Todo list ##
 * Check if I need to write StdRandom for Knuth shuffle - done
