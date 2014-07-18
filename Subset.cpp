@@ -27,7 +27,11 @@ int main() {
 	//for (int i = 0; i < k; i++) {
 	//	cout << RQ.dequeue() << endl;
 	//}
-	cout << "Iterator test" << endl;
+	cout << "Foreach test" << endl;
+	for (string s : RQ)
+		cout << s << " ";
+	cout << endl;
+	cout << "Deque Iterator test" << endl;
 	for (Deque<string>::Iterator iter = c_DQ.begin(); iter != c_DQ.end(); ++iter)
 		cout << *iter << endl;
 	cout << endl;
