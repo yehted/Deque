@@ -22,7 +22,7 @@ public:
 	class Iterator : public std::iterator < std::forward_iterator_tag, T > {
 	public:
 		Iterator() {}
-		~Iterator() {}
+		~Iterator() { delete[] copy; }
 		Iterator(T* &other, int N) : begin_(other), pos_(N) {
 			copy = createCopy(N);
 		}
@@ -148,13 +148,12 @@ template <class T> void RandomizedQueue<T>::resize(int capacity) {
 }
 
 template <class T> T RandomizedQueue<T>::dequeue() {
-	if (isEmpty()) throw std::underflow_error("Stack underflow");	// Check whats up with this line
+	if (isEmpty()) throw std::underflow_error("Stack underflow");
 
 	int x = rand() % N;
 	T answer = a[x];
 	
-	a[x] = a[--N];
-	
+	a[x] = a[--N];	
 
 	if (N > 0 && N == cap / 4) resize(cap / 2);
 	return answer;
