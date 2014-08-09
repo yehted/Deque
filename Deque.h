@@ -1,3 +1,6 @@
+#ifndef DEQUE_H
+#define DEQUE_H
+
 #include <stdexcept>
 #include <iterator>
 
@@ -170,3 +173,4 @@ template <class T> T Deque<T>::removeLast() {
 		last->next = NULL;
 	return t_item;
 }
+#endif // !DEQUE_H
