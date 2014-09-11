@@ -11,34 +11,33 @@ class Deque {
 public:
 	class Iterator;
 
-	Deque();								// Default constructor
-	~Deque();								// Deconstructor
-	Deque(const Deque &that);				// Copy constructor
-	Deque &operator=(const Deque &that);	// Assignment operator
-	bool isEmpty();							// Checks if deque is empty
-	int size();								// Returns number of items in deque
-	void addFirst(const T &item);			// Adds an item to the beginning of the deque
-	void addLast(const T &item);			// Adds an item to the end of the deque
-	T removeFirst();						// Removes an item from the beginning of the deque
-	T removeLast();							// Removes an item from the end of the deque
+	Deque();												// Default constructor
+	~Deque();												// Deconstructor
+	Deque(const Deque &that);								// Copy constructor
+	Deque &operator=(const Deque &that);					// Assignment operator
+	bool isEmpty();											// Checks if deque is empty
+	int size();												// Returns number of items in deque
+	void addFirst(const T &item);							// Adds an item to the beginning of the deque
+	void addLast(const T &item);							// Adds an item to the end of the deque
+	T removeFirst();										// Removes an item from the beginning of the deque
+	T removeLast();											// Removes an item from the end of the deque
 	Iterator begin() { return Iterator(first); }
 	Iterator end() { return Iterator(NULL); }
 
 	class Iterator : public std::iterator < std::forward_iterator_tag, T >	{
 	public:
-		Iterator() : p_(NULL) {}			// Default constructor
-		~Iterator() {}						// Destructor
-		Iterator(Node* p) : p_(p) {}		// Single argument constructor
-		Iterator(const Iterator &other) : p_(other.p_) {}	// Copy constructor
-		Iterator &operator=(const Iterator &other) { p_ = other.p_; return *this; }	// Copy assignment operator
-
-		Iterator &operator++()	{ p_ = p_->next; return *this; }	// prefix++
+		Iterator() : p_(NULL) {}																	// Default constructor
+		~Iterator() {}																				// Destructor
+		Iterator(Node* p) : p_(p) {}																// Single argument constructor
+		Iterator(const Iterator &other) : p_(other.p_) {}											// Copy constructor
+		Iterator &operator=(const Iterator &other) { p_ = other.p_; return *this; }					// Copy assignment operator
+		Iterator &operator++()	{ p_ = p_->next; return *this; }									// prefix++
 		Iterator operator++(int) { Node* previous = p_; p_ = p_->next; return Iterator(previous); }	// postfix++
-		bool operator==(const Iterator &other) { return p_ == other.p_; }	// Equals operator
-		bool operator!=(const Iterator &other) { return p_ != other.p_; }	// Not equals operator
+		bool operator==(const Iterator &other) { return p_ == other.p_; }							// Equals operator
+		bool operator!=(const Iterator &other) { return p_ != other.p_; }							// Not equals operator
 
-		T &operator*(){ return p_->item; }	// Dereference
-		T* operator->(){
+		T &operator*(){ return p_->item; }															// Dereference
+		T* operator->(){																			// Pointer
 			Iterator tmp = *this;
 			T& value = *tmp;
 			return (&value);
